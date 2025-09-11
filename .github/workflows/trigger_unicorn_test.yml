@@ -14,10 +14,11 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.UNICORN_REPO_TOKEN }}
-          repository: https://github.com/esuescun/unicorn  # Replace with your actual Unicorn repo
+          repository: esuescun/unicorn  # Replace with your actual Unicorn repo
           event-type: blorgh-updated
           client-payload: |
             {
               "ref": "${{ github.ref }}",
-              "sha": "${{ github.sha }}"
+              "sha": "${{ github.sha }}",
+              "repository": "${{ github.repository }}"
             }
