@@ -1,0 +1,23 @@
+name: Trigger Unicorn Tests
+run-name: Blorgh update - triggering Unicorn tests
+
+on:
+  push:
+    branches:
+      - latest
+
+jobs:
+  trigger-unicorn:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Unicorn CI
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.UNICORN_REPO_TOKEN }}
+          repository: https://github.com/esuescun/unicorn  # Replace with your actual Unicorn repo
+          event-type: blorgh-updated
+          client-payload: |
+            {
+              "ref": "${{ github.ref }}",
+              "sha": "${{ github.sha }}"
+            }
