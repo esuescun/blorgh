@@ -15,9 +15,9 @@ jobs:
         with:
           github-token: ${{ secrets.WORKFLOW }}
           script: |
-            await github.repos.createDispatch({
-              owner: esuescun,
-              repo: esuescun/unicorn,
+            await github.repos.createDispatchEvent({
+              owner: 'esuescun',
+              repo: 'unicorn',
               event_type: 'blorgh-updated',
               client_payload: {
                 source: 'blorgh',
