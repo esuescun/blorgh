@@ -13,7 +13,7 @@ jobs:
       - name: Dispatch to Unicorn
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.NEW_TOKEN }}
+          github-token: ${{ secrets.WORKFLOW }}
           script: |
             await github.repos.createDispatchEvent({
               owner: process.env.UNICORN_OWNER,

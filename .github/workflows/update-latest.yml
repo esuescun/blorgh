@@ -20,4 +20,4 @@ jobs:
         run: |
           git config user.name "esuescun"
           git config user.email "esuescun@curatechsas.com"
-          git push https://x-access-token:${{ secrets.NEW_TOKEN }}@github.com/${{ github.repository }} HEAD:latest
+          git push https://x-access-token:${{ secrets.WORKFLOW }}@github.com/${{ github.repository }} HEAD:latest
