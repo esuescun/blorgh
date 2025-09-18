@@ -16,8 +16,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Push to latest branch
+      - name: Update latest branch
         run: |
-          git config user.name "esuescun"
-          git config user.email "esuescun@curatechsas.com"
-          git push https://x-access-token:${{ secrets.WORKFLOW }}@github.com/${{ github.repository }} HEAD:latest
+          git checkout -B latest
+          git push origin latest --force

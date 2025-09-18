@@ -10,21 +10,45 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Dispatch to Unicorn
+      - name: Trigger Unicorn CI and repository_dispatch
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.WORKFLOW }}
           script: |
-            await github.repos.createDispatchEvent({
-              owner: process.env.UNICORN_OWNER,
-              repo: process.env.UNICORN_REPO,
+            const owner = process.env.UNICORN_OWNER;
+            const repo = process.env.UNICORN_REPO;
+            const ref = process.env.UNICORN_REF || 'main';
+
+            // First, try to trigger the Unicorn CI workflow directly (requires that Unicorn's CI.yml has `on: workflow_dispatch`)
+            try {
+              await github.rest.actions.createWorkflowDispatch({
+                owner,
+                repo,
+                workflow_id: 'CI.yml',
+                ref,
+                inputs: {
+                  source: 'blorgh',
+                  ref: context.ref,
+                  sha: context.sha
+                }
+              });
+              core.info('Triggered Unicorn CI.yml via workflow_dispatch');
+            } catch (e) {
+              core.warning(`Failed to trigger Unicorn CI.yml via workflow_dispatch: ${e.message}`);
+            }
+
+            // Also send a repository_dispatch event for compatibility
+            await github.rest.repos.createDispatchEvent({
+              owner,
+              repo,
               event_type: 'blorgh-updated',
               client_payload: {
                 source: 'blorgh',
                 ref: context.ref,
                 sha: context.sha
               }
-            })
+            });
         env:
           UNICORN_OWNER: esuescun
           UNICORN_REPO: unicorn
+          UNICORN_REF: main
