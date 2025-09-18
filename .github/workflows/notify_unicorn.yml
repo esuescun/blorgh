@@ -1,0 +1,30 @@
+name: Notify Unicorn on Blorgh updates
+
+on:
+  push:
+    branches: [ latest ]
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Dispatch to Unicorn
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.UNICORN_DISPATCH_TOKEN }}
+          script: |
+            await github.repos.createDispatchEvent({
+              owner: process.env.UNICORN_OWNER,
+              repo: process.env.UNICORN_REPO,
+              event_type: 'blorgh-updated',
+              client_payload: {
+                source: 'blorgh',
+                ref: context.ref,
+                sha: context.sha
+              }
+            })
+        env:
+          UNICORN_OWNER: your-org-or-user
+          UNICORN_REPO: unicorn
